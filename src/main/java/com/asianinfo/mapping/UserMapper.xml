@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.asianinfo.user.dao.IUserDao" >
+
+  <resultMap id="BaseResultMap" type="java.util.Map" >
+    <id column="ID" property="id" 				  jdbcType="INTEGER" />
+    <result column="USERNAME" property="userName" jdbcType="VARCHAR" />
+    <result column="PASSWD" property="passwd"     jdbcType="VARCHAR" />
+    <result column="NICKNAME" property="nickName" jdbcType="VARCHAR" />
+    <result column="USERTYPE" property="userType" jdbcType="INTEGER" />
+    <result column="COMMENTS" property="comments" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, USERNAME, PASSWD,NICKNAME, USERTYPE,COMMENTS
+  </sql>
+  
+  
+  
+  <!-- 根据用户名查询用户信息 -->
+  <select id="getAllUsers" resultMap="BaseResultMap" >
+	select ID, USERNAME, PASSWD,NICKNAME, USERTYPE,COMMENTS from USER 
+	
+  </select>
+  
+  <select id="getUserByUseName" resultType="com.asianinfo.user.model.UserInfo" parameterType="string" >
+	select ID, USERNAME, PASSWD,NICKNAME, USERTYPE,COMMENTS from USER 
+	where USER.USERNAME=#{USERNAME,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 新增用户 -->
+  <insert id="addUser" parameterType="com.asianinfo.user.model.UserInfo"  useGeneratedKeys="true" keyProperty="id" >
+    insert into USER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        USERNAME,
+      </if>
+      <if test="passwd != null" >
+        PASSWD,
+      </if>
+      <if test="nickName != null" >
+        NICKNAME,
+      </if>
+      <if test="userType != null" >
+        USERTYPE,
+      </if>
+      <if test="comments != null" >
+        COMMENTS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null" >
+        #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="comments != null" >
+        #{comments,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="int" order="AFTER" keyProperty="id"> 
+            SELECT LAST_INSERT_ID() 
+        </selectKey>
+  </insert>
+  
+  <!-- 用户登录验证 -->
+  <select id="auth" resultType="java.lang.Integer" parameterType="com.asianinfo.user.model.UserInfo">
+  	select count(*) from USER  where 
+  			USERNAME=#{userName,jdbcType=VARCHAR} 
+  			and 
+  			PASSWD=#{passwd,jdbcType=VARCHAR}
+  	
+  </select>
+  <!-- 修改用户信息 -->
+  <update id="updateUser" parameterType="com.asianinfo.user.model.UserInfo" >
+    update USER
+    <set >
+      <if test="passwd != null" >
+        PASSWD = #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        USERNAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        NICKNAME = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        USERTYPE = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="comments != null" >
+        COMMENTS = #{comments,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 删除用户信息 -->
+  <delete id="delUser" parameterType="java.lang.Integer" >
+    delete from USER
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+</mapper>
