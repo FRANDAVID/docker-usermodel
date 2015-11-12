@@ -2,8 +2,6 @@
  * Project Name:docker-usermodel
  * File Name:TestUser.java
  * Package Name:com.asianinfo.user
- * Date:2015年11月11日下午10:23:56
- * Copyright (c) 2015, chenzhou1025@126.com All Rights Reserved.
  *
 */
 
