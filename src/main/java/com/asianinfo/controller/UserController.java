@@ -200,6 +200,7 @@ public class UserController {
 			session.setAttribute("user", userName);
 			result.put(Config.codeFlag, Config.successCode);
 			result.put(Config.messageFlag, Config.successMes);
+			result.put("Authorization",authorization);
 			response.setHeader("Authorization", authorization);
 			return result;
 
